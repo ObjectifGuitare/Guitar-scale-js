@@ -9,13 +9,17 @@ let strokeWidth = 2;
 // Define the outline widths between the columns
 
 
-let fretNumber = 5;
-let stringNumber = 6
+const frets = {};
+frets.number = 5;
+frets.first = 1;
 
 const notes = {};
-notes.name = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+notes.sharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+notes.flats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
 const gString = {};
 gString.name = ['E', 'A', 'D', 'G', 'B', 'E'];
+gString.number = 6;
 
 // init svg container
 let svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -29,8 +33,8 @@ document.querySelector('#fretboard').appendChild(svgContainer);
 
 
 // Create the column and rows
-for (let i = 0; i < stringNumber - 1; i++) {
-  for (let j = 0; j < fretNumber; j++) {
+for (let i = 0; i < gString.number - 1; i++) {
+  for (let j = 0; j < frets.number; j++) {
     // Create a rectangle for the row background
     let rowRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rowRect.setAttribute("x", j * columnWidth);
