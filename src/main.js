@@ -1,4 +1,5 @@
-// import {} from "./utils.js"
+import {ScaleNames} from "./enums.js"
+import { Scales } from "./scales.js"
 
 var neckColor = "#F7CA9D"
 var fretColor = "#B69A79"
@@ -9,7 +10,15 @@ let columnWidth = 40;
 let rowHeight = 40;
 let strokeWidth = 2;
 
-// Define the outline widths between the columns
+class Scale {
+  constructor(key, scale, mode) {
+    this.key = key;
+    this.scale = scale;
+
+  }
+
+}
+
 const scales = {};
 scales.key = 'C';
 
@@ -27,7 +36,7 @@ scales.bebop = [2, 2, 1, 2, 2, 1, 1, 1]
 const frets = {};
 frets.number = 5;
 frets.first = 1;
-frets.current = 4;
+frets.current = 5;
 
 const notes = {};
 notes.sharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
@@ -92,6 +101,6 @@ function defineScale(key, formula)
     }
 }
 
-
+console.log(Scales.mothers[ScaleNames.Ionian].formula.);
 displayFretboard()
 displayDots(gString.current, frets.current)
