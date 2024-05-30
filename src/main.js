@@ -1,10 +1,8 @@
-import {ScaleNames} from "./enums.js"
 import { Scales } from "./scales.js"
 
 var neckColor = "#F7CA9D"
 var fretColor = "#B69A79"
 var dotColor = "#1B130A"
-var stringColor = "#FAB237"
 
 let columnWidth = 40;
 let rowHeight = 40;
@@ -12,21 +10,11 @@ let strokeWidth = 2;
 
 let sharpSet = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 let flatSet = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
-let tuning = ['E', 'A', 'D', 'G', 'B', 'E'];
-
-class Scale {
-  constructor(key, scale, mode) {
-    this.key = key;
-    this.scale = scale;
-
-  }
-
-}
+let tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 const frets = {};
-frets.number = 5;
+frets.number = 8;
 frets.first = 1;
-frets.current = 1;
 
 const gString = {};
 gString.number = 6;
@@ -64,6 +52,7 @@ function displayFretboard()
 
 function displayDots(string, fret)
 {
+  // console.log("bonjour")
   let circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
   circle.setAttribute("cx", columnWidth / 2); // x-coordinate of the center of the circle
   circle.setAttribute("cy", rowHeight / 2); // y-coordinate of the center of the circle
@@ -78,9 +67,7 @@ function displayDots(string, fret)
 function logFretBoard(stringSet)
 {
   for (let string = 0; string < gString.number; string++)
-    {
       console.log(stringSet[string]);
-    }
 }
 
 function tune()
@@ -104,13 +91,18 @@ function tune()
 
 function displayScale(scale)
 {
-  
-  // while()
-  // {
-  //   if ()
-  //       displayDots()
-
-  // }
+  while(svgContainer.lastChild)
+    svgContainer.removeChild(svgContainer.lastChild)
+  displayFretboard();
+  for (let string = 0; string < gString.number; string++)
+  {
+    for (let fret = frets.first; fret < frets.number + frets.first; fret++)
+    {
+      
+      if (scale.includes(stringSet[string][fret]))
+        displayDots(string + 1, fret - frets.first + 1)
+    }
+  }
 }
 
 function sharpOrFlat(note)
@@ -130,35 +122,45 @@ function getNoteIndex(noteSet, note)
   return (noteIndex);
 }
 
-var KeySelect = document.getElementById("key-select");
-let Key = KeySelect.value;
-KeySelect.addEventListener('change', function() {
-  Key = this.value
-})
-
-var ScaleSelect = document.getElementById("scale-select");
-let scale = [];
-ScaleSelect.addEventListener('change', function() {
+function initScale() {
+  
   let noteSet = sharpOrFlat(Key);
   let i = getNoteIndex(noteSet, Key);
   let j = 0;
-  let workingScale = Scales.mothers[this.value];
+  let workingScale = Scales.mothers[scaleChoice];
   while(j < workingScale.length) // the selected scale gets created through this loop
   {
     scale[j] = noteSet[i];
     i = (i + workingScale.formula[j]) % 12;
     j++;
   }
-  console.log(scale)
   displayScale(scale)
+}
+
+var KeySelect = document.getElementById("key-select");
+let Key = KeySelect.value;
+KeySelect.addEventListener('change', function() {
+  Key = this.value;
+  initScale();
 })
+
+var ScaleSelect = document.getElementById("scale-select");
+let scale = [];
+let scaleChoice = '0';
+ScaleSelect.addEventListener('change', function() {
+  scaleChoice = this.value;
+  initScale();
+});
 
 
 let svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 svgInit(svgContainer)
 displayFretboard()
-// displayDots(gString.current, frets.current)
 let stringSet = tune() // should become an event
+
+
+
+
 
 
 
@@ -166,9 +168,9 @@ let stringSet = tune() // should become an event
 
 var truth = document.getElementById("truthBtn")
 truth.addEventListener('click', function() {
-  let question = 0
+  let question = 1
   if (!question)
     console.log("Ask if you want to know")
   else
-    console.log();
+    console.log(scaleChoice)
 })
