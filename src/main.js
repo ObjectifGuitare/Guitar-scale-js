@@ -10,6 +10,10 @@ let columnWidth = 40;
 let rowHeight = 40;
 let strokeWidth = 2;
 
+let sharpSet = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+let flatSet = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+let tuning = ['E', 'A', 'D', 'G', 'B', 'E'];
+
 class Scale {
   constructor(key, scale, mode) {
     this.key = key;
@@ -19,43 +23,24 @@ class Scale {
 
 }
 
-const scales = {};
-scales.key = 'C';
-
-scales.major = {}
-scales.major.ionian = [2, 2, 1, 2, 2, 2, 1]
-scales.major.dblharmonic = [1, 3, 1, 2, 1, 3, 1]
-
-scales.minor = {}
-scales.minor.melodic = [2, 1, 2, 2, 2, 2, 1]
-scales.minor.harmonic = [2, 1, 2, 2, 1, 3, 1]
-scales.minor.pentatonic = [3, 2, 2, 3, 2]
-scales.minor.blues = [3, 2, 1, 1, 3, 2]
-scales.bebop = [2, 2, 1, 2, 2, 1, 1, 1]
-
 const frets = {};
 frets.number = 5;
 frets.first = 1;
-frets.current = 5;
-
-const notes = {};
-notes.sharps = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-notes.flats = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+frets.current = 1;
 
 const gString = {};
-gString.name = ['E', 'A', 'D', 'G', 'B', 'E'];
 gString.number = 6;
 gString.current = 2;
 
-// init svg container
-let svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-svgContainer.setAttribute("width", "500");
-svgContainer.setAttribute("height", "2300");
-svgContainer.setAttribute("viewBox", "0 0 500 300"); // Add a viewBox attribute
-// Add padding to the SVG container using CSS
-svgContainer.style.padding = "20px";
-document.querySelector('#fretboard').appendChild(svgContainer);
 
+function svgInit(svgContainer)
+{
+  svgContainer.setAttribute("width", "500");
+  svgContainer.setAttribute("height", "2300");
+  svgContainer.setAttribute("viewBox", "0 0 500 300"); // Add a viewBox attribute
+  svgContainer.style.padding = "20px";
+  document.querySelector('#fretboard').appendChild(svgContainer);
+}
 
 function displayFretboard()
 {
@@ -86,21 +71,104 @@ function displayDots(string, fret)
   circle.setAttribute("fill", dotColor); // color of the circle
   svgContainer.appendChild(circle);
 
-
   circle.setAttribute("cx", (columnWidth) * (fret - 0.5)); // déplace de 3 cases vers la droite
   circle.setAttribute("cy", rowHeight * (string - 1)); // déplace de 6 cases vers le bas
 }
 
-function defineScale(key, formula)
+function logFretBoard(stringSet)
 {
-  let currentScale = [];
-  
-  for(let i = 0; i < formula.length; i++)
+  for (let string = 0; string < gString.number; string++)
     {
-      
+      console.log(stringSet[string]);
     }
 }
 
-console.log(Scales.mothers[ScaleNames.Ionian].formula.);
+function tune()
+{
+  let stringSet = [];
+  let openStringNoteIndex;
+  let currentNoteIndex;
+  for (let string = 0; string < gString.number; string++)
+  {
+    stringSet[string] = [];
+    openStringNoteIndex = getNoteIndex(flatSet, tuning[string]); //flatset should be removed for noteSet
+    console.log(tuning[string])
+    for (let fret = 0; fret < 12; fret++)
+    {
+      currentNoteIndex = (openStringNoteIndex + fret) % 12;
+      stringSet[string][fret] = flatSet[currentNoteIndex]; //flatset should be removed for noteSet
+    }
+  }
+  return (stringSet);
+}
+
+function displayScale(scale)
+{
+  
+  // while()
+  // {
+  //   if ()
+  //       displayDots()
+
+  // }
+}
+
+function sharpOrFlat(note)
+{
+  // if (note.localeCompare('C#') == 0)
+  //   return sharpSet;
+  return flatSet;
+  // highly simplified version. Should include a note + mode criteria
+}
+
+function getNoteIndex(noteSet, note)
+{
+  let noteIndex = 0;
+  
+  while(noteSet[noteIndex] != note)
+    noteIndex++;
+  return (noteIndex);
+}
+
+var KeySelect = document.getElementById("key-select");
+let Key = KeySelect.value;
+KeySelect.addEventListener('change', function() {
+  Key = this.value
+})
+
+var ScaleSelect = document.getElementById("scale-select");
+let scale = [];
+ScaleSelect.addEventListener('change', function() {
+  let noteSet = sharpOrFlat(Key);
+  let i = getNoteIndex(noteSet);
+  let j = 0;
+  let workingScale = Scales.mothers[this.value];
+  while(j < workingScale.length) // the selected scale gets created through this loop
+  {
+    scale[j] = noteSet[i];
+    i = (i + workingScale.formula[j]) % 12;
+    j++;
+  }
+  console.log(scale)
+  displayScale(scale)
+})
+
+
+let svgContainer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+svgInit(svgContainer)
 displayFretboard()
-displayDots(gString.current, frets.current)
+// displayDots(gString.current, frets.current)
+let stringSet = tune() // should become an event
+
+
+
+
+
+var truth = document.getElementById("truthBtn")
+truth.addEventListener('click', function() {
+  let question = 0
+  if (!question)
+    console.log("Ask if you want to know")
+  else
+    console.log();
+})
