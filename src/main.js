@@ -2,6 +2,7 @@ import { Scales } from "./scales.js"
 
 var neckColor = "#F7CA9D"
 var fretColor = "#B69A79"
+var outOfBoard = "white"
 var dotColor = "#1B130A"
 
 let columnWidth = 40;
@@ -13,8 +14,8 @@ let flatSet = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 let tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 const frets = {};
-frets.number = 8;
-frets.first = 1;
+frets.number = 5;
+frets.first = 0;
 
 const gString = {};
 gString.number = 6;
@@ -40,8 +41,16 @@ function displayFretboard()
       rowRect.setAttribute("y", i * rowHeight);
       rowRect.setAttribute("width", columnWidth);
       rowRect.setAttribute("height", rowHeight);
-      rowRect.setAttribute("fill", neckColor);
-      rowRect.setAttribute("stroke", fretColor); // Add a colored stroke
+      if(j == 0 && frets.first == 0) //fret 0
+      {
+        rowRect.setAttribute("fill", outOfBoard);
+        rowRect.setAttribute("stroke", "white");
+      }
+      else // all frets on the fretboard
+      {
+        rowRect.setAttribute("fill", neckColor);
+        rowRect.setAttribute("stroke", fretColor); // Add a colored stroke
+      }
       rowRect.setAttribute("stroke-width", strokeWidth); // Set the stroke width
       svgContainer.appendChild(rowRect);
     }

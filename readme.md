@@ -44,9 +44,8 @@ Choices possible :
 
  # MVP
 
- - Redisplays the dots when new scale is selected
+
  - Mode management
- - Display changes when I only modify the key
- - Fret 0 is displayed
  - Fret Numbers are displayed underneath
  - I can export and save as SVG
+ - Choice between Flats and Sharps
