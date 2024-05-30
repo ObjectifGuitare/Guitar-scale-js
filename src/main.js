@@ -140,7 +140,7 @@ var ScaleSelect = document.getElementById("scale-select");
 let scale = [];
 ScaleSelect.addEventListener('change', function() {
   let noteSet = sharpOrFlat(Key);
-  let i = getNoteIndex(noteSet);
+  let i = getNoteIndex(noteSet, Key);
   let j = 0;
   let workingScale = Scales.mothers[this.value];
   while(j < workingScale.length) // the selected scale gets created through this loop
