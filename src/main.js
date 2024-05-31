@@ -14,7 +14,7 @@ let flatSet = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
 let tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 
 const frets = {};
-frets.number = 5;
+frets.number = 13;
 frets.first = 0;
 
 const gString = {};
@@ -31,9 +31,8 @@ function svgInit(svgContainer)
   document.querySelector('#fretboard').appendChild(svgContainer);
 }
 
-function displayFretboard()
-{
-  for (let i = 0; i < gString.number - 1; i++) {
+function displayFretboard() {
+  for (let i = 0; i < gString.number; i++) {
     for (let j = 0; j < frets.number; j++) {
       // Create a rectangle for the row background
       let rowRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
@@ -46,18 +45,42 @@ function displayFretboard()
         rowRect.setAttribute("fill", outOfBoard);
         rowRect.setAttribute("stroke", "white");
       }
-      else // all frets on the fretboard
+      else if (i == gString.number - 1)
+      {
+        rowRect.setAttribute("fill", "white");
+        rowRect.setAttribute("stroke", "white"); 
+        let fretText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        fretText.setAttribute("x", j * columnWidth + columnWidth / 2); // Center the text under the fret
+        fretText.setAttribute("y", (i * rowHeight) + rowHeight); // Position the text just below the fret
+        // fretText.setAttribute("font-family", "Verdana");
+        fretText.setAttribute("font-size", "10");
+        fretText.setAttribute("text-anchor", "middle"); // Center the text
+        fretText.textContent = j + frets.first; // The fret number is the same as the j variable
+        svgContainer.appendChild(fretText);
+      }
+      else // all visible frets on the fretboard
       {
         rowRect.setAttribute("fill", neckColor);
         rowRect.setAttribute("stroke", fretColor); // Add a colored stroke
       }
       rowRect.setAttribute("stroke-width", strokeWidth); // Set the stroke width
       svgContainer.appendChild(rowRect);
-    }
+      if (i == gString.number - 1)
+      { 
+        let fretText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        fretText.setAttribute("x", j * columnWidth + columnWidth / 2); // Center the text under the fret
+        fretText.setAttribute("y", (i * rowHeight) + rowHeight); // Position the text just below the fret
+        fretText.setAttribute("font-family", "Verdana");
+        fretText.setAttribute("font-size", "10");
+        fretText.setAttribute("text-anchor", "middle"); // Center the text
+        fretText.textContent = j + frets.first; // The fret number is the same as the j variable
+        svgContainer.appendChild(fretText);
+      }
   }
   svgContainer.setAttribute("width", "550");
   svgContainer.setAttribute("height", "550");
-}
+}}
+
 
 function displayDots(string, fret)
 {
@@ -170,9 +193,19 @@ let stringSet = tune() // should become an event
 
 
 
+function downloadSVG() {
+  const svg = document.getElementById('fretboard').firstChild.outerHTML;
+  const blob = new Blob([svg.toString()]);
+  const element = document.createElement("a");
+  element.download = "w3c.svg";
+  element.href = window.URL.createObjectURL(blob);
+  element.click();
+  element.remove();
+  console.log("dled")
+}
 
-
-
+let DwnldBtn = document.querySelector("#download")
+DwnldBtn.addEventListener('click', downloadSVG)
 
 
 var truth = document.getElementById("truthBtn")
