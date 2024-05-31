@@ -121,10 +121,14 @@ function tune()
   return (stringSet);
 }
 
+
 function displayScale(scale)
 {
   while(svgContainer.lastChild)
+  {
     svgContainer.removeChild(svgContainer.lastChild)
+
+  }
   displayFretboard();
   for (let string = 0; string < gString.number; string++)
   {
@@ -135,6 +139,7 @@ function displayScale(scale)
         displayDots(string + 1, fret - frets.first + 1)
     }
   }
+  console.log(scale)
 }
 
 function sharpOrFlat(note)
@@ -155,7 +160,7 @@ function getNoteIndex(noteSet, note)
 }
 
 function initScale() {
-  
+  scale = [];
   let noteSet = sharpOrFlat(Key);
   let i = getNoteIndex(noteSet, Key);
   let j = 0;
